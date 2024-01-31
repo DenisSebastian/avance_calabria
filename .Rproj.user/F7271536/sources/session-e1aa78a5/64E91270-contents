@@ -1,0 +1,474 @@
+---
+title: "Imputación de Datos Faltantes"
+subtitle: "Soluciónes para imágenes satelitales"
+author: "Denis Berroeta"
+# date: "2023-08-25"
+bibliography: references.bib
+format:
+  revealjs:
+    footer: "Imputación de Datos Faltantes - Kernel Convolutions"
+    logo: "images/orange_puzzle.png"
+    preview-links: true
+    css: style/style.css
+    transition: slide
+    center: true
+    chalkboard: true
+    theme: default
+---
+
+# Agenda 
+
+## Agenda
+
+::: columns
+::: {.column  width="40%" .p_small}
+
+-   Introducción
+-   Presentación del Problema   
+-   Soluciones 
+-   Resultados
+-   Conclusiones
+-   Bibliografía 
+:::
+
+::: {.column width="5%"}
+:::
+
+::: {.column width="55%" .p_small}
+
+<br>
+
+![](images/puzle_piece.jpeg){fig-align="center" width="300"}
+
+
+:::
+:::
+
+# Introducción
+
+
+## Introducción
+::: columns
+
+::: {.column  width="50%" .p_small}
+
+
+<br>
+
+Al calcular el indicador de **Amplitud Térmica Anual (IATA)** [^iata] en la Región del Biobío, cuyo insumo principal es una colección de imágenes satelitales Landsat 9, se observó en algunas zonas (pequeñas) no había información.
+
+No había información ya que a estas colecciónes de imágenes se le aplica un filtro de cobertura de nubes y sombra de nubes.
+
+<br>
+
+[^iata]: Índicador de Amplitud Térmica Anual (IATA) corresponde a la diferencia entre la Temperatura Superficial Terrestre (TST) máxima y mínima dentro de un año, Se calcula tal como se aprecia en la siguiente fórmula $IATA = TST_{ver}-TST_{inv}$
+
+
+:::
+::: {.column width="5%"}
+:::
+
+::: {.column width="45%" .p_small}
+
+![Región del Bíobío, Chile](images/Mapa_loc_Biobio.png){#fig-mapBB fig-align="center" width="200"}
+
+:::
+
+:::
+
+
+# Presentación del Problema
+
+## {background-image="images/collection_1.png" background-size="80%" background-position="center" auto-animate=true}
+
+## {background-image="images/collection_2.png" background-size="80%" background-position="center" auto-animate=true}
+
+## {background-image="images/collection_3.png" background-size="80%" background-position="center" auto-animate=true}
+
+## {background-image="images/collection_4.png" background-size="80%" background-position="center" auto-animate=true}
+
+## {background-image="images/collection_5.png" background-size="80%" background-position="center" auto-animate=true}
+
+
+## Visualización  de Valores Pérdidos en Raster
+::: columns
+
+::: {.column  width="45%" .p_small}
+
+<br>
+
+Ejemplos de visualización de valores perdidos en raster sobre la ciudad de Los Ángeles, por efectos de filtros de nubes (sombras) principalmente en las zonas de invierno. 
+
+La cuasa principal es  por condición atmosférica e interacción con la topografía, pero también por acción antópica como quema de combustibles fósiles como leña.
+
+:::
+::: {.column width="5%"}
+:::
+
+::: {.column width="50%" .p_small}
+
+![Imagen Original de Temperatura superficial afectada por nubes sombras de nubes, sobre la ciudad de Los Ángeles, Región del Biobío. ](images/NA_values_Original.png){#fig-isla_nasa2 fig-align="center" width="600"}
+
+:::
+
+:::
+
+
+## Imagen con Valores NA
+
+<center>
+
+```{r fig.align='center'}
+knitr::include_url("html/Orgin_NA_values.html", height = "500px")
+```
+
+</center>
+
+# Soluciones 
+
+
+## 
+
+::: columns
+
+::: {.column  width="65%" .p_small}
+
+<br>
+
+<h2>
+"Dime con quien andas y te diré quién eres"
+</h2>
+
+
+
+
+
+:::
+::: {.column width="2%"}
+:::
+
+::: {.column width="33%" .p_small}
+
+![Quijote de la Mancha,  de Miguel de Cervantes (1615)](images/quijote.jpeg){fig-align="center" width="600"}
+
+:::
+
+:::
+
+## Primera Ley de la Geografía
+
+::: columns
+
+::: {.column  width="65%" .p_small}
+
+<br>
+
+<h2>
+“Todas las cosas están relacionadas entre sí, pero las cosas más próximas en el espacio tienen una relación mayor que las distantes”.
+</h2>
+
+Waldo Tobler (1931-2018)
+
+![](images/wtobler.png){fig-align="center" width="200"}
+
+
+
+
+:::
+::: {.column width="2%"}
+:::
+
+::: {.column width="33%" .p_small}
+
+![Paper: A Computer Movie Simulating Urban Growth in the Detroit Region, Waldo @Tobler_1970](images/paper_tobler.gif){fig-align="center" width="600"}
+
+:::
+
+:::
+
+
+## Primera Ley de la Geografía
+
+<li>
+La ley de Tobler es el supuesto que está detrás de diversos análisis espaciales, como lo es la inferencia espacial (IDW, KDE, Krigging) y autocorrelación espacial (Local de Moran TOB)
+</li>
+
+::: columns
+::: {.column width="50%"}
+<br>
+
+![](images/values_idw.png){fig-align="center" width="600"}
+:::
+
+::: {.column width="50%"}
+
+<br>
+<br>
+
+![](images/IDW-Power2.png){fig-align="center" width="600"}
+
+
+:::
+
+:::
+
+
+## Kernel Convolutions
+
+::: columns
+
+::: {.column  width="45%" .p_small}
+
+<br>
+
+El proceso de convolución es fundamental en el procesamiento de imágenes y se utiliza para aplicar filtros y extraer características de las mismas. 
+
+En el contexto de procesamiento de imágenes, una convolución es una **operación matemática** que involucra una imagen y un kernel (también llamado filtro).
+
+Un kernel es una pequeña **matriz** que se desliza sobre la imagen original para realizar operaciones locales en cada región de la imagen. 
+
+
+
+:::
+::: {.column width="5%"}
+:::
+
+::: {.column width="50%" .p_small}
+
+![Kernel Convolution sobre una imagen de 2 dimensiones](images/con_res.gif){#fig-conv fig-align="center" width="600"}
+
+:::
+
+:::
+
+
+## Kernel Convolutions para Imputar NA
+
+::: columns
+
+::: {.column  width="45%" .p_small}
+
+
+
+
+La convolución se realiza multiplicando los valores de los píxeles en la región de la imagen que coincide con el kernel, y luego sumando los resultados para obtener el nuevo valor del píxel en la imagen de salida.
+
+![](images/NA_values_Original.png){fig-align="center" width="600"}
+
+:::
+::: {.column width="5%"}
+:::
+
+::: {.column width="50%" .p_small}
+
+<br>
+
+![Ejemplo de operaciones matemáticas de Kernel Convolution](images/conv_plane.gif){#fig-conv fig-align="center" width="800"}
+
+
+:::
+
+:::
+
+
+
+## Kernel de Promedios
+::: columns
+
+
+::: {.column  width="50%" .p_small}
+
+El Kernel de promedios es el más simple, el que en un sentido estricto está calculando el promedio de los los vecinos y reclacisica el pixel. Entonces los pixeles sin información (NA) se le asignará el resultado del promedio de los vecinos.
+
+<br>
+
+::: columns
+
+::: {.column  width="50%"}
+**Kernel**
+
+$$
+W= \begin{bmatrix}
+1 & 1 & 1 \\
+1 & 1 & 1 \\
+1 & 1 & 1 \\
+\end{bmatrix}
+$$
+:::
+::: {.column  width="50%"}
+<!-- =\frac{1}{n}\left(x_{1}+\cdots+x_{n}\right) -->
+**Función:** Sumatoria (local)
+
+$$x=\sum_{i=1}^{n} x_{i}$$
+:::
+:::
+
+
+:::
+::: {.column width="10%"}
+:::
+
+::: {.column width="40%" .p_small}
+
+![](images/Kernel_mean_pair.png){fig-align="center" width="500"}
+
+:::
+
+:::
+
+## Kernel Circular
+
+::: columns
+
+
+::: {.column  width="50%" .p_small}
+
+El Kernel Circular, toma un radio de influencia local, considera todos pixeles con información, todos pesan lo mismo. Entonces los pixeles sin información (NA) se le asignará el resultado del sumatoria de los vecinos.
+
+Pro: Se puede asignar un radio real (metros)
+
+<br>
+
+::: columns
+
+::: {.column  width="50%" .p_small}
+**Kernel**
+
+$$
+W= \begin{bmatrix}
+0 & 0.05 & 0.05 & 0.05 & 0\\
+0.05 & 0.05 & 0.05 & 0.05 & 0.05\\
+0.05 & 0.05 & 0.05 & 0.05 & 0.05\\
+0.05 & 0.05 & 0.05 & 0.05 & 0.05\\
+0 & 0.05 & 0.05 & 0.05 & 0\\
+\end{bmatrix}
+$$
+:::
+::: {.column  width="50%" .p_small}
+<!-- =\frac{1}{n}\left(x_{1}+\cdots+x_{n}\right) -->
+**Función:** Sumatoria (local)
+
+$$x=\sum_{i=1}^{n} x_{i}$$
+:::
+:::
+
+
+:::
+::: {.column width="10%"}
+:::
+
+::: {.column width="40%" .p_small}
+
+![](images/Kernel_circle_pair.png){fig-align="center" width="500"}
+
+:::
+
+:::
+
+## Kernel Gaussino
+
+
+::: columns
+
+
+::: {.column  width="50%" .p_small}
+
+El kernel modela una distribución Gaussiana ($N\times N$), con parámtros sigma ($\sigma$) y scale ($N$).
+
+::: columns
+
+::: {.column  width="50%" .p_small}
+**Kernel**
+
+$$
+W= \begin{bmatrix}
+0 & 0.01 & 0.02 & 0.01 & 0\\
+0.01 & 0.06 & 0.10 & 0.06 & 0.01\\
+0.02 & 0.10 & 0.16 & 0.10 & 0.02\\
+0.01 & 0.06 & 0.10 & 0.06 & 0.01\\
+0 & 0.01 & 0.02 & 0.01 & 0\\
+\end{bmatrix}
+$$
+:::
+::: {.column  width="50%" .p_small}
+<!-- =\frac{1}{n}\left(x_{1}+\cdots+x_{n}\right) -->
+**Función:** Sumatoria (local)
+
+$$x=\sum_{i=1}^{n} x_{i}$$
+:::
+:::
+
+![](images/gaussian_kernel.png){fig-align="center" width="300"}
+
+
+:::
+::: {.column width="10%"}
+:::
+
+::: {.column width="40%" .p_small}
+
+![](images/Kernel_gauss_pair.png){fig-align="center" width="500"}
+
+:::
+
+:::
+
+
+# Resultados
+
+
+## {background-image="images/Kernel_4.png" background-size="60%" background-position="center" auto-animate=true}
+
+## 
+
+<center>
+```{r fig.align='center', fig.width=8, fig.height=2}
+knitr::include_url("html/sync_map4_NA.html", height = "2000px")
+```
+</center>
+
+
+
+
+
+# Conclusiones
+
+## Conclusiones
+
+::: columns
+
+::: {.column  width="55%" .p_small}
+
+
+<br>
+
+Para realizar imputaciones de datos faltantes sobre imágenes raster a escala **regional** se sugiere el uso del Kernel tipo **"Circular"** ya que su parámetro principal es distancia del radio, ajustado en metros.
+
+Para realizar imputaciones de datos faltantes sobre imágenes raster a escala **pequeña** se sugiere el uso del Kernel tipo **"Gaussiano"**, con sus parámetros de sigma y escala se puede controlar el área de influencia local.
+
+
+:::
+::: {.column width="2%"}
+:::
+
+::: {.column width="43%" .p_small}
+
+![Metodología de Kernel Circular para imputar valores faltantes](images/Kernel_circle.png){fig-align="center" width="600"}
+
+:::
+
+:::
+
+
+# Bibliografía
+
+##
+
+**Referencias **
+
+<br>
+
+::: {#refs}
+:::
+
+# {background-image="images/puzzle.jpeg" background-size="100%" background-position="center" auto-animate=true}

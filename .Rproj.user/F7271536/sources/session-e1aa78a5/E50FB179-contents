@@ -1,0 +1,90 @@
+# 
+
+destElement <-  tar_read(destElement)
+local_equip <- destElement$equipLocalNodes %>% st_centroid()
+metro_equip <- destElement$equipMetroNodes%>% st_centroid()
+
+
+
+indicador <-  st_read("results/shapes/ReggioDiCalabria_CL_all_IDEP.shp")
+b <- classInt::classIntervals(indicador$IDEP, n = 10, style = "fisher")
+hist(indicador$IDEP, breaks = 100)
+
+normal <- indicador %>% 
+  # filter(IDEP<1000) %>%
+  select(TIPO_LO, COD_IST, PERSONAS, IDEP, IDEP_l, IDEP_m) %>%
+  mapview(zcol = "IDEP", at =  b$brks) +
+  mapview(local_equip, col.regions ="green") +
+  mapview(metro_equip, col.regions = "red")
+
+
+
+
+indicadorSA <-  st_read("results/shapes/ReggioDiCalabria_SA_IDEP.shp")
+bSA <- classInt::classIntervals(indicadorSA$IDEP, n = 10, style = "fisher")
+hist(indicadorSA$IDEP, breaks = 100)
+
+SA <- indicadorSA %>% 
+  # filter(IDEP<1000) %>%
+  select(TIPO_LO, COD_IST, PERSONAS, IDEP, IDEP_l, IDEP_m) %>%
+  mapview(zcol = "IDEP", at =  bSA$brks) 
+SA
+
+
+
+
+indicadorPM <-  st_read("results/shapes/ReggioDiCalabria_PM_IDEP.shp")
+bPM <- classInt::classIntervals(indicadorPM$IDEP, n = 10, style = "fisher")
+hist(indicadorPM$IDEP, breaks = 100)
+
+PM <- indicadorPM %>% 
+  # filter(IDEP<1000) %>%
+  select(TIPO_LO, COD_IST, PERSONAS, IDEP, IDEP_l, IDEP_m) %>%
+  mapview(zcol = "IDEP", at =  bPM$brks) 
+PM
+# Revisión Cosenza --------------------------------------------------------
+
+
+
+destElement <-  tar_read(destElement)
+local_equip <- destElement$equipLocalNodes %>% st_centroid()
+metro_equip <- destElement$equipMetroNodes%>% st_centroid()
+
+
+
+indicador <-  st_read("results/shapes/ReggioDiCalabria_CL_all_IDEP.shp")
+b <- classInt::classIntervals(indicador$IDEP, n = 10, style = "fisher")
+hist(indicador$IDEP, breaks = 100)
+
+normal <- indicador %>% 
+  # filter(IDEP<1000) %>%
+  select(TIPO_LO, COD_IST, PERSONAS, IDEP, IDEP_l, IDEP_m) %>%
+  mapview(zcol = "IDEP", at =  b$brks) +
+  mapview(local_equip, col.regions ="green") +
+  mapview(metro_equip, col.regions = "red")
+
+
+
+
+indicadorSA <-  st_read("results/shapes/ReggioDiCalabria_SA_IDEP.shp")
+bSA <- classInt::classIntervals(indicadorSA$IDEP, n = 10, style = "fisher")
+hist(indicadorSA$IDEP, breaks = 100)
+
+SA <- indicadorSA %>% 
+  # filter(IDEP<1000) %>%
+  select(TIPO_LO, COD_IST, PERSONAS, IDEP, IDEP_l, IDEP_m) %>%
+  mapview(zcol = "IDEP", at =  bSA$brks) 
+SA
+
+
+
+
+indicadorPM <-  st_read("results/shapes/")
+bPM <- classInt::classIntervals(indicadorPM$IDEP, n = 10, style = "fisher")
+hist(indicadorPM$IDEP, breaks = 100)
+
+PM <- indicadorPM %>% 
+  # filter(IDEP<1000) %>%
+  select(TIPO_LO, COD_IST, PERSONAS, IDEP, IDEP_l, IDEP_m) %>%
+  mapview(zcol = "IDEP", at =  bPM$brks) 
+PM
