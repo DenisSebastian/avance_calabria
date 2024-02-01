@@ -3,7 +3,7 @@
     "path": "~/Documents/CIT/Calabria/presentaciones/acc_calabria_pres/pres_acc.qmd",
     "project_path": "pres_acc.qmd",
     "type": "quarto_markdown",
-    "hash": "3176411404",
+    "hash": "0",
     "contents": "",
     "dirty": false,
     "created": 1705671516528.0,
@@ -13,16 +13,16 @@
         "tempName": "Untitled2",
         "source_window_id": "",
         "Source": "Sourcecwkp0g8qoqy3",
-        "cursorPosition": "133,31",
-        "scrollLine": "99",
-        "marks": "<:60,0\n>:91,-1"
+        "cursorPosition": "151,0",
+        "scrollLine": "139",
+        "marks": "<:40,0\n>:44,-1"
     },
     "folds": "",
-    "lastKnownWriteTime": 1706784179,
+    "lastKnownWriteTime": 1706785096,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1706784179950,
+    "last_content_update": 1706785096276,
     "read_only": false,
     "read_only_alternatives": []
 }

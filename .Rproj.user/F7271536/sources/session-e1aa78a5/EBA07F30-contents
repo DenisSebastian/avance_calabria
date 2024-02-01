@@ -18,27 +18,30 @@ format:
 # Agenda 
 
 
-## {background-image="images/agenda.png" background-size="80%" background-position="center" auto-animate=true}
+## {background-image="images/accesibilidad/agenda.png" background-size="80%" background-position="center" auto-animate=true}
 
 
 # Accesibilidad
 
 
 
-## {background-image="images/accesibilidad.png" background-size="80%" background-position="center" auto-animate=true}
+## {background-image="images/accesibilidad/accesibilidad.png" background-size="80%" background-position="center" auto-animate=true}
 
 
-## {background-image="images/acc_1.png" background-size="80%" background-position="center" auto-animate=true}
+## {background-image="images/accesibilidad/acc_1.png" background-size="80%" background-position="center" auto-animate=true}
 
 
 
-## {background-image="images/acc_2.png" background-size="80%" background-position="center" auto-animate=true}
+## {background-image="images/accesibilidad/acc_2.png" background-size="80%" background-position="center" auto-animate=true}
 
 
 ## {background-image="images/accesibilidad/ecuacion_acc.png" background-size="80%" background-position="center" auto-animate=true}
 
 
 ## {background-image="images/accesibilidad/ecuacion_acc2.png" background-size="80%" background-position="center" auto-animate=true}
+
+## {background-image="images/accesibilidad/opo_dem.png" background-size="80%" background-position="center" auto-animate=true}
+
 
 # Impedacias
 ## {background-image="images/accesibilidad/impedancia_1.png" background-size="80%" background-position="center" auto-animate=true}
@@ -159,7 +162,7 @@ knitr::include_url("html/rdc_pm.html", height = "500px")
 
 - Imputación de Población Rural
 - Limpiar y unificar Red Vial
-- Cálculo de accesibilidad IDEP en toda la Región de Calabria
+- Cálculo de accesibilidad en toda la Región de Calabria
 - Cálculo de todos los indicadores de Accesibilidad
 
 
