@@ -18,30 +18,30 @@ format:
 # Agenda 
 
 
-## {background-image="images/agenda.png" background-size="75%" background-position="center" auto-animate=true}
+## {background-image="images/agenda.png" background-size="80%" background-position="center" auto-animate=true}
 
 
 # Accesibilidad
 
 
 
-## {background-image="images/accesibilidad.png" background-size="75%" background-position="center" auto-animate=true}
+## {background-image="images/accesibilidad.png" background-size="80%" background-position="center" auto-animate=true}
 
 
-## {background-image="images/acc_1.png" background-size="75%" background-position="center" auto-animate=true}
+## {background-image="images/acc_1.png" background-size="80%" background-position="center" auto-animate=true}
 
 
 
-## {background-image="images/acc_2.png" background-size="75%" background-position="center" auto-animate=true}
+## {background-image="images/acc_2.png" background-size="80%" background-position="center" auto-animate=true}
 
 
-## {background-image="images/accesibilidad/ecuacion_acc.png" background-size="75%" background-position="center" auto-animate=true}
+## {background-image="images/accesibilidad/ecuacion_acc.png" background-size="80%" background-position="center" auto-animate=true}
 
 
-## {background-image="images/accesibilidad/ecuacion_acc2.png" background-size="75%" background-position="center" auto-animate=true}
+## {background-image="images/accesibilidad/ecuacion_acc2.png" background-size="80%" background-position="center" auto-animate=true}
 
 # Impedacias
-## {background-image="images/accesibilidad/impedancia_1.png" background-size="75%" background-position="center" auto-animate=true}
+## {background-image="images/accesibilidad/impedancia_1.png" background-size="80%" background-position="center" auto-animate=true}
 
 
 
@@ -69,6 +69,28 @@ knitr::include_url("html/cosenza_cl.html", height = "500px")
 </center>
 
 
+## Accesibilidad con Impedancia San Antonio (semi rural) 
+
+<center>
+
+```{r fig.align='center'}
+knitr::include_url("html/cosenza_sa.html", height = "500px")
+```
+
+</center>
+
+## Accesibilidad con Impedancia Puerto Montt (rural) 
+
+<center>
+
+```{r fig.align='center'}
+knitr::include_url("html/cosenza_pm.html", height = "500px")
+```
+
+</center>
+
+
+
 # Reggio di Calabria
 
 
@@ -91,6 +113,29 @@ knitr::include_url("html/rdc_cl.html", height = "500px")
 ```
 
 </center>
+
+
+
+## Accesibilidad con Impedancia San Antonio (semi rural) 
+
+<center>
+
+```{r fig.align='center'}
+knitr::include_url("html/rdc_sa.html", height = "500px")
+```
+
+</center>
+
+## Accesibilidad con Impedancia Puerto Montt (rural) 
+
+<center>
+
+```{r fig.align='center'}
+knitr::include_url("html/rdc_pm.html", height = "500px")
+```
+
+</center>
+
 
 
 # Trabajos Futuros
