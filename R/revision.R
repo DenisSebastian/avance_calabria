@@ -145,7 +145,7 @@ indicadorPM <- indicadorPM %>%
                      include.lowest = T), 
          TIPO = ifelse(TIPO_LO %in% c(1,2), "Urbano", "Rural"))
 
-PM_map <- mapview(indicadorPM, zcol = "IDEP", at =  bSA$brks, 
+PM_map <- mapview(indicadorPM, zcol = "IDEP", at =  bPM$brks, 
                   col.regions = idep_pal, 
                   na.color = "transparent", color = NA) 
 

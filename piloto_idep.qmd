@@ -1,6 +1,6 @@
 ---
 title: "Piloto de Accesibilidad en Italia"
-subtitle: "Comunas de Cosenza y Reggio di Calabria"
+subtitle: "Calabria,  Cosenza y Reggio di Calabria"
 # author: "Denis Berroeta"
 # date: "2023-08-25"
 bibliography: references.bib
@@ -50,11 +50,16 @@ library(tidyr)
 
 ##  {background-image="images/accesibilidad/opo_dem.png" background-size="80%" background-position="center" auto-animate="true"}
 
-# Impedacias
 
 ##  {background-image="images/accesibilidad/impedancia_1.png" background-size="80%" background-position="center" auto-animate="true"}
 
-# Equipamientos de Deportes
+# Ejemplo Práctico con IDEP
+
+
+
+## {background-image="images/accesibilidad/Equipamientos Deportivos.png" background-size="30%" background-position="center" auto-animate="true"}
+
+# Equipamientos de Deportes   
 
 ## Insumos
 
@@ -65,6 +70,9 @@ knitr::include_url("html/calabria_insumos.html", height = "500px")
 ```
 
 </center>
+
+
+
 
 # Accesibilidad Calabria
 
@@ -80,7 +88,7 @@ load_impedances_txt <- function(path_txt){
 
 <center>
 
-Parámetros de Impedancia de Chile
+**Parámetros de Impedancia de Chile**
 
 <center>
 
@@ -114,7 +122,11 @@ indicador <- indicador %>%
 
 ```
 
-## Accesibilidad Impedancia Chile
+
+
+## 
+
+
 
 <center>
 
@@ -126,7 +138,6 @@ knitr::include_url("html/calabria_cl.html", height = "500px")
 
 ## 
 
-**Resumen General**
 
 ```{r}
 #| output: asis
@@ -145,6 +156,7 @@ tab_all <- indicador %>% st_drop_geometry() %>%
 
 ::: columns
 ::: {.column .p_small width="30%"}
+
 <br>
 
 ```{r}
@@ -168,8 +180,9 @@ tab_all %>% kbl() %>%
 ```
 
 -   Se utilizó de quiebres de *Fisher*
--   Valor máximo ($`r round(max(indicador_raw$IDEP, na.rm = T))` m\^2/p\$) real.
+-   Valor máximo ($`r round(max(indicador_raw$IDEP, na.rm = T))` m^2/p$) real.
 -   Se ajustó el rango máximo $100\ m^2/persona$, para destacar la variabilidad de los rangos inferiores.
+
 :::
 
 ::: {.column .p_small width="70%"}
@@ -189,8 +202,11 @@ fig
 :::
 :::
 
-## Parámetros de Impedancia
 
+
+
+
+## Parámetros de Impedancia (Chile)
 
 
 ::: columns
@@ -198,7 +214,6 @@ fig
 
 ::: {.column .p_small width="50%"}
 
-<br>
 
 ![](images/accesibilidad/eq_impedancia.png){fig-align="center" width="300"}
 
@@ -231,9 +246,324 @@ imp_chile %>% kbl() %>%
 :::
 
 ::: {.column .p_small width="50%"}
+
+![Ejemplo modelo de compartamiento de las personas en relacción de acceder a un bien o servicio en función del tiempo](images/accesibilidad/impedancia.png)
+
+:::
+:::
+
+
+# Accesibilidad Calabria
+
+<center>
+
+**Parámetros de Impedancia de Ciudad de San Antonio**
+
+</center>
+
+```{r echo=FALSE}
+indicador_raw_sa <- readRDS("data/calabria/calabria_SA_IDEP.rds")
+indicador_sa <- indicador_raw_sa %>% 
+  mutate(
+    IDEP = ifelse(IDEP > 100,100, IDEP),
+    IDEP = round(IDEP, 2))
+
+bSA <- classInt::classIntervals(na.omit(indicador_sa$IDEP), 
+                              n = n_breaks, style = "fisher",
+                              intervalClosure = "right")
+
+# hist(indicador$IDEP, breaks = 100)
+
+indicador_sa <- indicador_sa %>% 
+  select(TIPO_LO, COD_IST, PERSONAS,AREA_KM,IDEP, IDEP_l, IDEP_m) %>% 
+  mutate(level = cut(IDEP, breaks = bSA$brks, right = T, 
+                     include.lowest = T), 
+         TIPO = ifelse(TIPO_LO %in% c(1,2), "Urbano", "Rural"))
+         
+
+```
+
+##
+
+<center>
+
+```{r fig.align='center'}
+knitr::include_url("html/calabria_sa.html", height = "500px")
+```
+
+</center>
+
+## 
+
+**Resumen General**
+
+```{r}
+#| output: asis
+
+tab_sa <- indicador_sa %>% st_drop_geometry() %>% 
+  mutate(total_personas = sum(PERSONAS, na.rm = T)) %>% 
+  mutate(area_total = sum(AREA_KM, na.rm = T)) %>% 
+  group_by(level, TIPO ) %>% 
+  summarise(.groups = "keep",
+            Personas = sum(PERSONAS, na.rm = T)) %>% 
+  pivot_wider(names_from = TIPO, values_from = Personas) %>% 
+  filter(!is.na(level))
+
+# md_table(tab_all, caption = "Resumen Rural")
+```
+
+::: columns
+::: {.column .p_small width="30%"}
+
+<br>
+
+```{r}
+#| output: asis
+
+tab_sa <- tab_sa %>% 
+  mutate_if(is.numeric, round, 2) 
+
+# md_table(tab_all, caption = "Resumen General")
+tab_sa %>% kbl() %>%
+   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), 
+                 font_size = 15, full_width = F) %>% 
+  column_spec(2, color = "white",
+              background = "#FD6910") %>% 
+  column_spec(3, color = "white",
+              background = "#1B62A5") 
+# datatable(tab_all, class = 'cell-border stripe',  rownames = FALSE,
+#           filter = 'top', options = list(pageLength = 10, 
+#                                          autoWidth = TRUE))%>%
+#   DT::formatStyle(columns = colnames(.),  fontSize = '10px')
+```
+
+-   Se utilizó de quiebres de *Fisher*
+-   Valor máximo ($`r round(max(indicador_raw_sa$IDEP, na.rm = T))` m^2/p$) real.
+-   Se ajustó el rango máximo $100\ m^2/persona$, para destacar la variabilidad de los rangos inferiores.
+
+
+:::
+
+::: {.column .p_small width="70%"}
+
+```{r}
+#| output: asis
+
+fig_sa <- plot_ly(data =tab_sa, x = ~ level, y = ~ Urbano,
+               name = "Urbano",type = "bar", width = "10%")
+
+fig_sa <- fig_sa %>% add_trace(y = ~Rural, name = 'Rural')
+fig_sa <- fig_sa %>% layout(yaxis = list(title = 'Personas'),
+                      xaxis = list(title = 'Rangos'),
+                      barmode = 'stack' )
+
+fig_sa
+```
+
+:::
+:::
+
+
+
+## Parámetros de Impedancia
+
+::: columns
+
+
+
+::: {.column .p_small width="50%"}
+
+<br>
+
+![](images/accesibilidad/eq_impedancia.png){fig-align="center" width="300"}
+
+
+
+```{r}
+#| output: asis
+
+
+imp_sa_raw <- load_impedances_txt(path_txt = "data/resources/SanAntonio/impedancias.txt")
+
+imp_sa <- imp_sa_raw %>% 
+  select(-r2)%>% 
+  mutate_if(is.numeric, round, 5) 
+
+# md_table(tab_all, caption = "Resumen General")
+imp_sa %>% kbl() %>%
+   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), font_size = 15, full_width = F) %>% 
+  column_spec(3, color = "white",
+              background = "#FD6910") %>% 
+  column_spec(4, color = "white",
+              background = "#1B62A5") 
+# datatable(tab_all, class = 'cell-border stripe',  rownames = FALSE,
+#           filter = 'top', options = list(pageLength = 10, 
+#                                          autoWidth = TRUE))%>%
+#   DT::formatStyle(columns = colnames(.),  fontSize = '10px')
+```
+
+
+
+:::
+
+::: {.column .p_small width="50%"}
 ![Ejemplo modelo de compartamiento de las personas en relacción de acceder a un bien o servicio en función del tiempo](images/accesibilidad/impedancia.png)
 :::
 :::
+
+
+
+# Accesibilidad Calabria
+
+<center>
+
+**Parámetros de Impedancia de Ciudad de Puerto Mont (Rural)**
+
+</center>
+
+```{r echo=FALSE}
+indicador_raw_pm <- readRDS("data/calabria/calabria_PM_IDEP.rds")
+indicador_pm <- indicador_raw_pm %>% 
+  mutate(
+    IDEP = ifelse(IDEP > 100,100, IDEP),
+    IDEP = round(IDEP, 2))
+
+bPM <- classInt::classIntervals(na.omit(indicador_pm$IDEP), 
+                              n = n_breaks, style = "fisher",
+                              intervalClosure = "right")
+
+# hist(indicador$IDEP, breaks = 100)
+
+indicador_pm<- indicador_pm %>% 
+  select(TIPO_LO, COD_IST, PERSONAS,AREA_KM,IDEP, IDEP_l, IDEP_m) %>% 
+  mutate(level = cut(IDEP, breaks = bPM$brks, right = T, 
+                     include.lowest = T), 
+         TIPO = ifelse(TIPO_LO %in% c(1,2), "Urbano", "Rural"))
+         
+
+```
+
+##
+
+<center>
+
+```{r fig.align='center'}
+knitr::include_url("html/calabria_pm.html", height = "500px")
+```
+
+</center>
+
+## 
+
+**Resumen General**
+
+```{r}
+#| output: asis
+
+tab_pm <- indicador_pm %>% st_drop_geometry() %>% 
+  mutate(total_personas = sum(PERSONAS, na.rm = T)) %>% 
+  mutate(area_total = sum(AREA_KM, na.rm = T)) %>% 
+  group_by(level, TIPO ) %>% 
+  summarise(.groups = "keep",
+            Personas = sum(PERSONAS, na.rm = T)) %>% 
+  pivot_wider(names_from = TIPO, values_from = Personas) %>% 
+  filter(!is.na(level))
+
+# md_table(tab_all, caption = "Resumen Rural")
+```
+
+::: columns
+::: {.column .p_small width="30%"}
+<br>
+
+```{r}
+#| output: asis
+
+tab_pm <- tab_pm %>% 
+  mutate_if(is.numeric, round, 2) 
+
+# md_table(tab_all, caption = "Resumen General")
+tab_sa %>% kbl() %>%
+   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), 
+                 font_size = 15, full_width = F) %>% 
+  column_spec(2, color = "white",
+              background = "#FD6910") %>% 
+  column_spec(3, color = "white",
+              background = "#1B62A5") 
+# datatable(tab_all, class = 'cell-border stripe',  rownames = FALSE,
+#           filter = 'top', options = list(pageLength = 10, 
+#                                          autoWidth = TRUE))%>%
+#   DT::formatStyle(columns = colnames(.),  fontSize = '10px')
+```
+
+-   Se utilizó de quiebres de *Fisher*
+-   Valor máximo ($`r round(max(indicador_raw_pm$IDEP, na.rm = T))` m^2/p$) real.
+-   Se ajustó el rango máximo $100\ m^2/persona$, para destacar la variabilidad de los rangos inferiores.
+:::
+
+::: {.column .p_small width="70%"}
+```{r}
+#| output: asis
+
+fig_pm <- plot_ly(data =tab_pm, x = ~ level, y = ~ Urbano,
+               name = "Urbano",type = "bar", width = "10%")
+
+fig_pm <- fig_pm %>% add_trace(y = ~Rural, name = 'Rural')
+fig_pm <- fig_pm %>% layout(yaxis = list(title = 'Personas'),
+                      xaxis = list(title = 'Rangos'),
+                      barmode = 'stack')
+
+fig_pm
+```
+:::
+:::
+
+## Parámetros de Impedancia
+
+
+
+::: columns
+
+
+::: {.column .p_small width="50%"}
+
+<br>
+
+![](images/accesibilidad/eq_impedancia.png){fig-align="center" width="300"}
+
+
+
+```{r}
+#| output: asis
+
+
+imp_pm_raw <- load_impedances_txt(path_txt = "data/resources/PuertoMontt/impedancias.txt")
+imp_chile <- imp_chile_raw %>% 
+  select(-r2) %>% 
+  mutate_if(is.numeric, round, 6) 
+
+# md_table(tab_all, caption = "Resumen General")
+imp_pm_raw %>% kbl() %>%
+   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), font_size = 15, full_width = F) %>% 
+  column_spec(3, color = "white",
+              background = "#FD6910") %>% 
+  column_spec(4, color = "white",
+              background = "#1B62A5") 
+# datatable(tab_all, class = 'cell-border stripe',  rownames = FALSE,
+#           filter = 'top', options = list(pageLength = 10, 
+#                                          autoWidth = TRUE))%>%
+#   DT::formatStyle(columns = colnames(.),  fontSize = '10px')
+```
+
+
+
+:::
+
+::: {.column .p_small width="50%"}
+![Ejemplo modelo de compartamiento de las personas en relacción de acceder a un bien o servicio en función del tiempo](images/accesibilidad/impedancia.png)
+:::
+:::
+
 
 # Cosenza
 
@@ -331,10 +661,10 @@ knitr::include_url("html/rdc_pm.html", height = "500px")
 
 <br>
 
--   Imputación de Población Rural
--   Limpiar y unificar Red Vial
--   Cálculo de accesibilidad en toda la Región de Calabria
--   Cálculo de todos los indicadores de Accesibilidad
+-  Cálculo de todos los indicadores de Accesibilidad
+-  Seleccionar una Función de Impedancia
+
+
 :::
 
 ::: {.column width="5%"}
