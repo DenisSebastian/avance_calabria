@@ -1,0 +1,24 @@
+nombre,abrev_insumo,abrev_ind,nombre_grafico,pob_rev,proposito,oportunidad,unidad,achurado,archivo,colores,itera_grafico,itera_accesibilidad
+Cultura,icul,icul,Indicador de Accesibilidad a Equipamentos Culturales,personas,libre,area,m² por Habitante,SI,carto_acc,"#A7A394,#DECFB4,#FABC6B,#E69545,#B35F0B",1,1
+Area Verdes,iav,iav,Indicador de Accesibilidad a Áreas Verdes,personas,libre,area,m² por Habitante,SI,carto_acc,"#A7A394,#CFCAB6,#9AB586,#5C8944,#3E5C2E",1,1
+Salud,isal,isal,Indicador de Accesibilidad a Equipamentos de Salud,personas,hacer,area,m² por Habitante,SI,carto_acc,"#A7A394,#D9BDAF,#E38264,#D44D35,#C40A0A",1,1
+Deportes,idep,idep,Indicador de Accesibilidad a Equipamentos Deportivos,personas,libre,area,m² por Habitante,SI,carto_acc,"#A7A394,#BACBCC,#7FBCC7,#5995AB,#446B87",1,1
+Servicios Publicos,iser,iser,Indicador de Accesibilidad a Servicios Públicos,personas,hacer,area,Servicios públicos cada 1.000 habitantes,SI,carto_acc,"#A7A394,#C7BFCD,#AE91BF,#8A6A9C,#623973",1,1
+Educacion,ise,ise,Indicador de Accesibilidad a Servicios de Educación,e4a18,hacer,matriculas,Matrículas por niño(a),SI,carto_acc,"#A80000,#E64C00,#F5A37A,#9CBAD6,#6699CC",1,1
+Cobertura Vegetal,icv,ICV,Indicador de Cobertura Vegetal,AREA,,,% Cobertura Vegetal,NO,carto_amb,"#C9C6A9,#9EAC8E,#76A882,#4A8744,#226633",1,0
+Amplitud Termica,iata,IATA,Indicador de Amplitud Térmica,AREA,,,°C,NO,carto_amb,"#FFFF00,#F5CC00,#E69900,#F56200,#FF0000",1,0
+,iej,IEJ,Indicador de Escolaridad de Jefe de Hogar,personas,,,Años de Escolaridad,SI,carto_soc,"#B26E35,#DDA795,#C6C6C6,#A8CFDB,#47A4B8",1,0
+,irh,IRH,Indicador de Resiliencia de Hogares,personas,,,Valor Indicador,SI,carto_soc,"#A7A394,#C6C6C6,#D07664,#CE6352,#D44623",1,0
+,iem,IEM,Indicador de Empleo,personas,,,Valor Indicador,SI,carto_soc,"#A7A394,#C6C6C6,#CC6276,#D44859,#CF3043",1,0
+,ipj,IPJ,Indicador de Participación Juvenil en Empleo y Estudio,personas,,,Valor Indicador,SI,carto_soc,"#A7A394,#C6C6C6,#B27487,#AF5871,#B33854",1,0
+,isv,ISV,Indicador de Suficiencia de Viviendas,personas,,,Valor Indicador,SI,carto_soc,"#A7A394,#C6C6C6,#D891B8,#CE6AA1,#C75281",1,0
+,ivi,IVI,Indicador de Calidad de la Vivienda,personas,,,Valor Indicador,SI,carto_soc,"#A7A394,#C6C6C6,#A0708D,#9C5A80,#A63C6E",1,0
+,lvs_prs,ILPE,Indicador ante Delitos Leves contra las Personas,AREA,,,Nivel de Seguridad,NO,carto_seg,"#EADCE8,#D6A8CE,#A760A3,#974794,#821F82",1,0
+,lvs_prp,ILPR,Indicador ante Delitos Leves contra la Propiedad,AREA,,,Nivel de Seguridad,NO,carto_seg,"#EADCE8,#D6A8CE,#A760A3,#974794,#821F82",1,0
+,grvs_prs,IGPE,Indicador ante Delitos Graves contra las Personas,AREA,,,Nivel de Seguridad,NO,carto_seg,"#EADCE8,#D6A8CE,#A760A3,#974794,#821F82",1,0
+,grvs_prp,IGPR,Indicador ante Delitos Graves contra la Propiedad,AREA,,,Nivel de Seguridad,NO,carto_seg,"#EADCE8,#D6A8CE,#A760A3,#974794,#821F82",1,0
+,ibt,ibt,,personas,,,,,,"#c3d4db,#a7bfc9,#8dabba,#7697ab,#5f8299,#4c6f8a,#3b5d7a,#2b4a69,#1e3a59,#142b4a",0,0
+,dim_acc,dim_acc,,personas,,,,,,"#E8F6F3,#D0ECE7,#A2D9CE,#73C6B6,#45B39D,#16A085,#138D75,#117A65,#0E6655,#0B5345",0,0
+,dim_seg,dim_seg,,personas,,,,,,"#EADCE8,#DFBAD9,#D6A8CE,#C185B9,#A760A3,#9A4C98,#974794,#90398D,#821F82,#652368",0,0
+,dim_soc,dim_soc,,personas,,,,,,"#D9CCE2,#C1B1D1,#B2A1CE,#A78BC0,#9473B1,#835EA4,#74539A,#61448C,#4C3275,#3A224D",0,0
+,dim_amb,dim_amb,,personas,,,,,,"#FEF5E7,#FDEBD0,#FAD7A0,#F8C471,#F5B041,#F39C13,#D68910,#B9770E,#9C640C,#7E5109",0,0

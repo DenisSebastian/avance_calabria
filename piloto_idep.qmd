@@ -1,0 +1,348 @@
+---
+title: "Piloto de Accesibilidad en Italia"
+subtitle: "Comunas de Cosenza y Reggio di Calabria"
+# author: "Denis Berroeta"
+# date: "2023-08-25"
+bibliography: references.bib
+format:
+  revealjs:
+    footer: "Piloto de Accesibilidad en Italia"
+    logo: "images/matriz_logo.png"
+    preview-links: true
+    css: style/style.css
+    transition: slide
+    center: true
+    chalkboard: true
+    theme: default
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = F, message = F)
+
+library(classInt)
+library(sf)
+library(mapview)
+library(dplyr)
+library(readr)
+library(plotly)
+library(simplermarkdown)
+library(kableExtra)
+library(tidyr)
+```
+
+# Agenda
+
+##  {background-image="images/accesibilidad/agenda.png" background-size="80%" background-position="center" auto-animate="true"}
+
+# Accesibilidad
+
+##  {background-image="images/accesibilidad/accesibilidad.png" background-size="80%" background-position="center" auto-animate="true"}
+
+##  {background-image="images/accesibilidad/acc_1.png" background-size="80%" background-position="center" auto-animate="true"}
+
+##  {background-image="images/accesibilidad/acc_2.png" background-size="80%" background-position="center" auto-animate="true"}
+
+##  {background-image="images/accesibilidad/ecuacion_acc.png" background-size="80%" background-position="center" auto-animate="true"}
+
+##  {background-image="images/accesibilidad/ecuacion_acc2.png" background-size="80%" background-position="center" auto-animate="true"}
+
+##  {background-image="images/accesibilidad/opo_dem.png" background-size="80%" background-position="center" auto-animate="true"}
+
+# Impedacias
+
+##  {background-image="images/accesibilidad/impedancia_1.png" background-size="80%" background-position="center" auto-animate="true"}
+
+# Equipamientos de Deportes
+
+## Insumos
+
+<center>
+
+```{r fig.align='center'}
+knitr::include_url("html/calabria_insumos.html", height = "500px")
+```
+
+</center>
+
+# Accesibilidad Calabria
+
+```{r}
+load_impedances_txt <- function(path_txt){
+  impedancias <- read_tsv(path_txt) %>% 
+    tidyr::separate(tipo, c("modo","proposito"), "_")
+  return(impedancias)
+}
+
+
+```
+
+<center>
+
+Parámetros de Impedancia de Chile
+
+<center>
+
+```{r echo=FALSE}
+indicador_raw <- readRDS("data/calabria/calabria_CL_IDEP.rds")
+paleta_hex <- read_delim("data/resources/paleta_hex.csv", 
+                         delim = ";", escape_double = FALSE,
+                         trim_ws = TRUE)
+
+idep_pal <-  paleta_hex %>% select(IDEP) %>% na.omit() %>% pull()
+n_breaks <- length(idep_pal)
+max_value <- 500
+
+indicador <- indicador_raw %>% 
+  mutate(
+    IDEP = ifelse(IDEP > 100,100, IDEP),
+    IDEP = round(IDEP, 2))
+
+b <- classInt::classIntervals(na.omit(indicador$IDEP), 
+                              n = n_breaks, style = "fisher",
+                              intervalClosure = "right")
+
+# hist(indicador$IDEP, breaks = 100)
+
+indicador <- indicador %>% 
+  select(TIPO_LO, COD_IST, PERSONAS,AREA_KM,IDEP, IDEP_l, IDEP_m) %>% 
+  mutate(level = cut(IDEP, breaks = b$brks, right = T, 
+                     include.lowest = T), 
+         TIPO = ifelse(TIPO_LO %in% c(1,2), "Urbano", "Rural"))
+         
+
+```
+
+## Accesibilidad Impedancia Chile
+
+<center>
+
+```{r fig.align='center'}
+knitr::include_url("html/calabria_cl.html", height = "500px")
+```
+
+</center>
+
+## 
+
+**Resumen General**
+
+```{r}
+#| output: asis
+
+tab_all <- indicador %>% st_drop_geometry() %>% 
+  mutate(total_personas = sum(PERSONAS, na.rm = T)) %>% 
+  mutate(area_total = sum(AREA_KM, na.rm = T)) %>% 
+  group_by(level, TIPO ) %>% 
+  summarise(.groups = "keep",
+            Personas = sum(PERSONAS, na.rm = T)) %>% 
+  pivot_wider(names_from = TIPO, values_from = Personas) %>% 
+  filter(!is.na(level))
+
+# md_table(tab_all, caption = "Resumen Rural")
+```
+
+::: columns
+::: {.column .p_small width="30%"}
+<br>
+
+```{r}
+#| output: asis
+
+tab_all <- tab_all %>% 
+  mutate_if(is.numeric, round, 2) 
+
+# md_table(tab_all, caption = "Resumen General")
+tab_all %>% kbl() %>%
+   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), 
+                 font_size = 15, full_width = F) %>% 
+  column_spec(2, color = "white",
+              background = "#FD6910") %>% 
+  column_spec(3, color = "white",
+              background = "#1B62A5") 
+# datatable(tab_all, class = 'cell-border stripe',  rownames = FALSE,
+#           filter = 'top', options = list(pageLength = 10, 
+#                                          autoWidth = TRUE))%>%
+#   DT::formatStyle(columns = colnames(.),  fontSize = '10px')
+```
+
+-   Se utilizó de quiebres de *Fisher*
+-   Valor máximo ($`r round(max(indicador_raw$IDEP, na.rm = T))` m\^2/p\$) real.
+-   Se ajustó el rango máximo $100\ m^2/persona$, para destacar la variabilidad de los rangos inferiores.
+:::
+
+::: {.column .p_small width="70%"}
+```{r}
+#| output: asis
+
+fig <- plot_ly(data =tab_all, x = ~ level, y = ~ Urbano,
+               name = "Urbano",type = "bar", width = "10%")
+
+fig <- fig %>% add_trace(y = ~Rural, name = 'Rural')
+fig <- fig %>% layout(yaxis = list(title = 'Personas'),
+                      xaxis = list(title = 'Rangos'),
+                      barmode = 'stack' )
+
+fig
+```
+:::
+:::
+
+## Parámetros de Impedancia
+
+
+
+::: columns
+
+
+::: {.column .p_small width="50%"}
+
+<br>
+
+![](images/accesibilidad/eq_impedancia.png){fig-align="center" width="300"}
+
+
+
+```{r}
+#| output: asis
+
+
+imp_chile_raw <- load_impedances_txt(path_txt = "data/resources/impedancias.txt")
+imp_chile <- imp_chile_raw %>% 
+  select(-r2) %>% 
+  mutate_if(is.numeric, round, 5) 
+
+# md_table(tab_all, caption = "Resumen General")
+imp_chile %>% kbl() %>%
+   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), font_size = 15, full_width = F) %>% 
+  column_spec(3, color = "white",
+              background = "#FD6910") %>% 
+  column_spec(4, color = "white",
+              background = "#1B62A5") 
+# datatable(tab_all, class = 'cell-border stripe',  rownames = FALSE,
+#           filter = 'top', options = list(pageLength = 10, 
+#                                          autoWidth = TRUE))%>%
+#   DT::formatStyle(columns = colnames(.),  fontSize = '10px')
+```
+
+
+
+:::
+
+::: {.column .p_small width="50%"}
+![Ejemplo modelo de compartamiento de las personas en relacción de acceder a un bien o servicio en función del tiempo](images/accesibilidad/impedancia.png)
+:::
+:::
+
+# Cosenza
+
+## Insumos
+
+<center>
+
+```{r fig.align='center'}
+knitr::include_url("html/consenza_insumos.html", height = "500px")
+```
+
+</center>
+
+## Accesibilidad con Impedancia Chile
+
+<center>
+
+```{r fig.align='center'}
+knitr::include_url("html/cosenza_cl.html", height = "500px")
+```
+
+</center>
+
+## Accesibilidad con Impedancia San Antonio (semi rural)
+
+<center>
+
+```{r fig.align='center'}
+knitr::include_url("html/cosenza_sa.html", height = "500px")
+```
+
+</center>
+
+## Accesibilidad con Impedancia Puerto Montt (rural)
+
+<center>
+
+```{r fig.align='center'}
+knitr::include_url("html/cosenza_pm.html", height = "500px")
+```
+
+</center>
+
+# Reggio di Calabria
+
+## Insumos
+
+<center>
+
+```{r fig.align='center'}
+knitr::include_url("html/rdc_insumos.html", height = "500px")
+```
+
+</center>
+
+## Accesibilidad con Impedancia Chile
+
+<center>
+
+```{r fig.align='center'}
+knitr::include_url("html/rdc_cl.html", height = "500px")
+```
+
+</center>
+
+## Accesibilidad con Impedancia San Antonio (semi rural)
+
+<center>
+
+```{r fig.align='center'}
+knitr::include_url("html/rdc_sa.html", height = "500px")
+```
+
+</center>
+
+## Accesibilidad con Impedancia Puerto Montt (rural)
+
+<center>
+
+```{r fig.align='center'}
+knitr::include_url("html/rdc_pm.html", height = "500px")
+```
+
+</center>
+
+# Trabajos Futuros
+
+## 
+
+::: columns
+::: {.column .p_small width="45%"}
+<br>
+
+**Trabajos Futuros**
+
+<br>
+
+-   Imputación de Población Rural
+-   Limpiar y unificar Red Vial
+-   Cálculo de accesibilidad en toda la Región de Calabria
+-   Cálculo de todos los indicadores de Accesibilidad
+:::
+
+::: {.column width="5%"}
+:::
+
+::: {.column .p_small width="50%"}
+<br>
+
+![](images/calabria/500px-Calabria_in_Italy.png){fig-align="center" width="400"}
+:::
+:::
