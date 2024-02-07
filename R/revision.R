@@ -178,59 +178,97 @@ insumos
 
 # CL
 
+
+
 indicador <- readRDS("~/Documents/CIT/Calabria/presentaciones/acc_calabria_pres/data/cosenza/Cosenza_CL_IDEP.rds")
-b <- classInt::classIntervals(indicador$IDEP, n = 10, style = "fisher")
+indicador <- indicador %>% 
+  mutate(
+    # IDEP = ifelse(IDEP > 100,100, IDEP),
+    IDEP = round(IDEP, 2))
+b <- classInt::classIntervals(na.omit(indicador$IDEP), 
+                              n = n_breaks, style = "fisher",
+                              intervalClosure = "right")
+
+indicador <- indicador %>% 
+  select(TIPO_LO, COD_IST, PERSONAS,AREA_KM,IDEP, IDEP_l, IDEP_m) %>% 
+  mutate(level = cut(IDEP, breaks = b$brks, right = T, 
+                     include.lowest = T), 
+         TIPO = ifelse(TIPO_LO %in% c(1,2), "Urbano", "Rural"))
+
 hist(indicador$IDEP, breaks = 100)
 
-
-normal_map <- indicador %>% 
-  select(TIPO_LO, COD_IST, PERSONAS, IDEP, IDEP_l, IDEP_m) %>%
-  mapview(zcol = "IDEP", at =  b$brks) 
-
-
+normal_map <- indicador %>%
+  mapview(zcol = "IDEP", at =  b$brks, col.regions = idep_pal, 
+          na.color = "transparent", color = NA) 
 
 
 normal <- mapview(metro_equip, col.regions = "red") +
   mapview(local_equip, col.regions ="blue") +
   normal_map
-  
+
 normal
 
 
+
+
+
+
 indicadorSA <- readRDS("~/Documents/CIT/Calabria/presentaciones/acc_calabria_pres/data/cosenza/Cosenza_SA_IDEP.rds")
-bSA <- classInt::classIntervals(indicadorSA$IDEP, n = 10, style = "fisher")
+indicadorSA <- indicadorSA %>% 
+  mutate(
+    # IDEP = ifelse(IDEP > 100,100, IDEP),
+    IDEP = round(IDEP, 2))
+bSA <- classInt::classIntervals(na.omit(indicadorSA$IDEP), 
+                              n = n_breaks, style = "fisher",
+                              intervalClosure = "right")
+
+
 hist(indicadorSA$IDEP, breaks = 100)
 
 
 SA_map <- indicadorSA %>% 
-  select(TIPO_LO, COD_IST, PERSONAS, IDEP, IDEP_l, IDEP_m) %>% 
-  mapview(zcol = "IDEP", at =  bSA$brks) 
+  select(TIPO_LO, COD_IST, PERSONAS,AREA_KM,IDEP, IDEP_l, IDEP_m) %>% 
+  mutate(level = cut(IDEP, breaks = bSA$brks, right = T, 
+                     include.lowest = T), 
+         TIPO = ifelse(TIPO_LO %in% c(1,2), "Urbano", "Rural"))
 
-  
-  
-SA <- mapview(metro_equip, col.regions = "red")+
+SA_map <- indicadorSA %>%
+  mapview(zcol = "IDEP", at =  bSA$brks, col.regions = idep_pal, 
+          na.color = "transparent", color = NA) 
+
+
+SA <- mapview(metro_equip, col.regions = "red") +
   mapview(local_equip, col.regions ="blue") +
-  SA_map 
-SA
+  SA_map
 
 
 indicadorPM <- readRDS("~/Documents/CIT/Calabria/presentaciones/acc_calabria_pres/data/cosenza/Cosenza_PM_IDEP.rds")
-bPM <- classInt::classIntervals(indicadorPM$IDEP, n = 10, style = "fisher")
+indicadorPM <- indicadorPM %>% 
+  mutate(
+    # IDEP = ifelse(IDEP > 100,100, IDEP),
+    IDEP = round(IDEP, 2))
+bPM <- classInt::classIntervals(na.omit(indicadorPM$IDEP), 
+                                n = n_breaks, style = "fisher",
+                                intervalClosure = "right")
+
+
 hist(indicadorPM$IDEP, breaks = 100)
 
 
 PM_map <- indicadorPM %>% 
-  select(TIPO_LO, COD_IST, PERSONAS, IDEP, IDEP_l, IDEP_m) %>% 
-  mapview(zcol = "IDEP", at =  bPM$brks) 
+  select(TIPO_LO, COD_IST, PERSONAS,AREA_KM,IDEP, IDEP_l, IDEP_m) %>% 
+  mutate(level = cut(IDEP, breaks = bPM$brks, right = T, 
+                     include.lowest = T), 
+         TIPO = ifelse(TIPO_LO %in% c(1,2), "Urbano", "Rural"))
+
+PM_map <- indicadorPM %>%
+  mapview(zcol = "IDEP", at =  bPM$brks, col.regions = idep_pal, 
+          na.color = "transparent", color = NA) 
 
 
-
-PM <- 
-  mapview(metro_equip, col.regions = "red")+
+PM <- mapview(metro_equip, col.regions = "red") +
   mapview(local_equip, col.regions ="blue") +
-  PM_map 
-  
-PM
+  PM_map
 
 
   
@@ -252,52 +290,93 @@ equip <- st_read("~/Documents/CIT/Calabria/piloto_calabria/data/shapes/equipment
   insumos  
   
   indicador <- readRDS("~/Documents/CIT/Calabria/presentaciones/acc_calabria_pres/data/reggio_di_calabria/reggio_di_calabria_CL_IDEP.rds")
-  b <- classInt::classIntervals(indicador$IDEP, n = 10, style = "fisher")
+  indicador <- indicador %>% 
+    mutate(
+      # IDEP = ifelse(IDEP > 100,100, IDEP),
+      IDEP = round(IDEP, 2))
+  b <- classInt::classIntervals(na.omit(indicador$IDEP), 
+                                n = n_breaks, style = "fisher",
+                                intervalClosure = "right")
+  
+  indicador <- indicador %>% 
+    select(TIPO_LO, COD_IST, PERSONAS,AREA_KM,IDEP, IDEP_l, IDEP_m) %>% 
+    mutate(level = cut(IDEP, breaks = b$brks, right = T, 
+                       include.lowest = T), 
+           TIPO = ifelse(TIPO_LO %in% c(1,2), "Urbano", "Rural"))
+  
   hist(indicador$IDEP, breaks = 100)
   
+  normal_map <- indicador %>%
+    mapview(zcol = "IDEP", at =  b$brks, col.regions = idep_pal, 
+            na.color = "transparent", color = NA) 
   
-  normal <- indicador %>% 
-    select(TIPO_LO, COD_IST, PERSONAS, IDEP, IDEP_l, IDEP_m) %>%
-    mapview(zcol = "IDEP", at =  b$brks) +
-    mapview(metro_equip, col.regions = "red")
-  mapview(local_equip, col.regions ="blue") +
-    
-    normal
+  
+  normal <- mapview(metro_equip, col.regions = "red") +
+    mapview(local_equip, col.regions ="blue") +
+    normal_map
+  
+  normal
 
   
   
   indicadorSA <- readRDS("~/Documents/CIT/Calabria/presentaciones/acc_calabria_pres/data/reggio_di_calabria/reggio_di_calabria_SA_IDEP.rds")
-  bSA <- classInt::classIntervals(indicadorSA$IDEP, n = 10, style = "fisher")
+  indicadorSA <- indicadorSA %>% 
+    mutate(
+      # IDEP = ifelse(IDEP > 100,100, IDEP),
+      IDEP = round(IDEP, 2))
+  bSA <- classInt::classIntervals(na.omit(indicadorSA$IDEP), 
+                                  n = n_breaks, style = "fisher",
+                                  intervalClosure = "right")
+  
+  
   hist(indicadorSA$IDEP, breaks = 100)
   
   
   SA_map <- indicadorSA %>% 
-    select(TIPO_LO, COD_IST, PERSONAS, IDEP, IDEP_l, IDEP_m) %>% 
-    mapview(zcol = "IDEP", at =  bSA$brks) 
+    select(TIPO_LO, COD_IST, PERSONAS,AREA_KM,IDEP, IDEP_l, IDEP_m) %>% 
+    mutate(level = cut(IDEP, breaks = bSA$brks, right = T, 
+                       include.lowest = T), 
+           TIPO = ifelse(TIPO_LO %in% c(1,2), "Urbano", "Rural"))
+  
+  SA_map <- indicadorSA %>%
+    mapview(zcol = "IDEP", at =  bSA$brks, col.regions = idep_pal, 
+            na.color = "transparent", color = NA) 
   
   
-  
-  SA <- mapview(metro_equip, col.regions = "red")+
+  SA <- mapview(metro_equip, col.regions = "red") +
     mapview(local_equip, col.regions ="blue") +
-    SA_map 
+    SA_map
+  
   SA
   
-  
   indicadorPM <- readRDS("~/Documents/CIT/Calabria/presentaciones/acc_calabria_pres/data/reggio_di_calabria/reggio_di_calabria_PM_IDEP.rds")
-  bPM <- classInt::classIntervals(indicadorPM$IDEP, n = 10, style = "fisher")
+  indicadorPM <- indicadorPM %>% 
+    mutate(
+      # IDEP = ifelse(IDEP > 100,100, IDEP),
+      IDEP = round(IDEP, 2))
+  bPM <- classInt::classIntervals(na.omit(indicadorPM$IDEP), 
+                                  n = n_breaks, style = "fisher",
+                                  intervalClosure = "right")
+  
+  
   hist(indicadorPM$IDEP, breaks = 100)
   
   
   PM_map <- indicadorPM %>% 
-    select(TIPO_LO, COD_IST, PERSONAS, IDEP, IDEP_l, IDEP_m) %>% 
-    mapview(zcol = "IDEP", at =  bPM$brks) 
+    select(TIPO_LO, COD_IST, PERSONAS,AREA_KM,IDEP, IDEP_l, IDEP_m) %>% 
+    mutate(level = cut(IDEP, breaks = bPM$brks, right = T, 
+                       include.lowest = T), 
+           TIPO = ifelse(TIPO_LO %in% c(1,2), "Urbano", "Rural"))
+  
+  PM_map <- indicadorPM %>%
+    mapview(zcol = "IDEP", at =  bPM$brks, col.regions = idep_pal, 
+            na.color = "transparent", color = NA) 
   
   
-  
-  PM <- 
-    mapview(metro_equip, col.regions = "red")+
+  PM <- mapview(metro_equip, col.regions = "red") +
     mapview(local_equip, col.regions ="blue") +
-    PM_map 
+    PM_map
+  
   
   PM
   
